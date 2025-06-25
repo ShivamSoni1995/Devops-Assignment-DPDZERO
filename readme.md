@@ -17,25 +17,6 @@ This project demonstrates a production-ready microservices setup with:
 - **Nginx Reverse Proxy**: Load balancing and routing
 - **Docker Compose**: Complete orchestration
 
-## 📁 Project Structure
-
-```
-microservices-docker-nginx/
-├── docker-compose.yml          # Main orchestration file
-├── nginx/
-│   ├── Dockerfile
-│   └── nginx.conf             # Reverse proxy configuration
-├── go-service/
-│   ├── Dockerfile
-│   ├── go.mod
-│   ├── go.sum
-│   └── main.go               # Go application
-├── python-service/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── app.py               # Python application
-└── README.md
-```
 
 ## 🚀 Quick Start
 
