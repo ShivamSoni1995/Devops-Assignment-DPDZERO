@@ -1,6 +1,12 @@
 # Microservices Architecture with Docker and Nginx
 
-A complete microservices architecture featuring Go and Python backend services orchestrated with Docker Compose and load-balanced through an nginx reverse proxy. Deploy the entire stack with just one command.
+A complete microservices architecture featuring Go and Python backend services orchestrated with Docker Compose and load-balanced through an nginx reverse proxy. Deploy the entire stack with just one command. Here are the values of this project
+
+✅ Single command deployment
+✅ All services accessible via one port
+✅ Automatic health checks
+✅ Detailed request logging
+✅ Clean architecture separation
 
 ## 🏗️ Architecture Overview
 
@@ -49,17 +55,15 @@ That's it! The entire microservices stack will be running and accessible.
 ## 📋 Services
 
 ### Go Service
-- **Port**: 8080 (internal)
-- **Technology**: Go with Gin framework
-- **Endpoints**: `/api/go/*`
+- **Port**: 8081 (internal)
+- **Technology**: Go 
 
 ### Python Service  
 - **Port**: 8000 (internal)
 - **Technology**: Python with Flask/FastAPI
-- **Endpoints**: `/api/python/*`
 
 ### Nginx Reverse Proxy
-- **Port**: 80 (external)
+- **Port**: 3000 (external)
 - **Function**: Load balancing and request routing
 - **Configuration**: Routes requests based on URL paths
 
@@ -67,16 +71,7 @@ That's it! The entire microservices stack will be running and accessible.
 
 ### Environment Variables
 
-Create a `.env` file in the root directory:
 
-```env
-# Go Service
-GO_PORT=8080
-GO_ENV=production
-
-# Python Service  
-PYTHON_PORT=8000
-PYTHON_ENV=production
 
 # Nginx
 NGINX_PORT=80
@@ -86,9 +81,8 @@ NGINX_PORT=80
 
 The nginx configuration routes requests as follows:
 
-- `/api/go/*` → Go Service (port 8080)
-- `/api/python/*` → Python Service (port 8000)
-- `/` → Static content or default service
+- `http://localhost:3000/service1/ping* and *http://localhost:3000/service1/hello*` → Go Service (port 8081)
+- `http://localhost:3000/service2/ping* and *http://localhost:3000/service2/hello*` → Python Service (port 8000)
 
 ## 🧪 Testing the Services
 
@@ -96,26 +90,19 @@ The nginx configuration routes requests as follows:
 
 ```bash
 # Test Go service
-curl http://localhost/api/go/health
+curl http://localhost:3000/service1/ping
+curl http://localhost:3000/service1/hello
 
 # Test Python service  
-curl http://localhost/api/python/health
+http://localhost:3000/service2/ping
+http://localhost:3000/service2/hello
 
 # Test nginx
-curl http://localhost/
+curl http://localhost:3000/
+http://localhost:3000/health (nginx health)
 ```
 
-### Load Testing
 
-```bash
-# Install Apache Bench (if not already installed)
-# Ubuntu/Debian: apt-get install apache2-utils
-# macOS: brew install httpie
-
-# Test load balancing
-ab -n 1000 -c 10 http://localhost/api/go/
-ab -n 1000 -c 10 http://localhost/api/python/
-```
 
 ## 🐳 Docker Commands
 
@@ -134,16 +121,7 @@ docker-compose logs -f
 docker-compose down
 ```
 
-### Individual Service Management
-```bash
-# Rebuild specific service
-docker-compose build go-service
-docker-compose build python-service
-docker-compose build nginx
 
-# Scale services
-docker-compose up --scale go-service=3 --scale python-service=2
-```
 
 ## 🔍 Monitoring and Debugging
 
@@ -156,38 +134,16 @@ docker-compose ps
 ```bash
 # All services
 docker-compose logs
-
-# Specific service
-docker-compose logs go-service
-docker-compose logs python-service
 docker-compose logs nginx
-```
 
-### Execute Commands in Containers
-```bash
-# Access Go service container
-docker-compose exec go-service /bin/sh
 
-# Access Python service container
-docker-compose exec python-service /bin/bash
 
-# Access Nginx container
-docker-compose exec nginx /bin/bash
 ```
 
 ## 🚦 API Endpoints
 
-### Go Service Endpoints
-- `GET /api/go/health` - Health check
-- `GET /api/go/users` - Get all users
-- `POST /api/go/users` - Create user
-- `GET /api/go/users/{id}` - Get user by ID
 
-### Python Service Endpoints  
-- `GET /api/python/health` - Health check
-- `GET /api/python/data` - Get data
-- `POST /api/python/process` - Process data
-- `GET /api/python/status` - Service status
+
 
 ## 🛠️ Development
 
@@ -201,21 +157,11 @@ docker-compose exec nginx /bin/bash
 
 2. **Start development environment**
    ```bash
-   docker-compose -f docker-compose.dev.yml up --build
+   docker-compose up --build
    ```
 
-3. **Make changes and rebuild**
-   ```bash
-   docker-compose build <service-name>
-   docker-compose up -d <service-name>
-   ```
 
-### Adding New Services
 
-1. Create service directory with Dockerfile
-2. Add service to `docker-compose.yml`
-3. Update nginx configuration for routing
-4. Rebuild and deploy
 
 ## 🔐 Security Considerations
 
@@ -261,25 +207,6 @@ docker-compose ps
 docker-compose exec nginx nginx -t
 ```
 
-## 📈 Scaling and Production
-
-### Production Deployment
-
-1. **Use production docker-compose file**
-   ```bash
-   docker-compose -f docker-compose.prod.yml up -d
-   ```
-
-2. **Set up monitoring** (Prometheus + Grafana)
-3. **Configure SSL/TLS** with Let's Encrypt
-4. **Set up CI/CD pipeline**
-5. **Implement health checks and alerting**
-
-### Horizontal Scaling
-```bash
-# Scale services based on load
-docker-compose up --scale go-service=5 --scale python-service=3
-```
 
 ## 🤝 Contributing
 
